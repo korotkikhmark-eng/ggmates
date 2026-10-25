@@ -9,6 +9,7 @@ import Search from './pages/Search';
 import Team from './pages/Team';
 import Teams from './pages/Teams';
 import { socket } from './socket';
+import { Logo } from './Logo';
 
 const nav = [{ to: '/', label: 'Главная', icon: HomeIcon }, { to: '/teams', label: 'Мои команды', icon: Users }, { to: '/profile', label: 'Профиль', icon: UserIcon }];
 
@@ -21,7 +22,7 @@ export default function App() {
   return (
     <div className="md:flex min-h-screen">
       <aside className="hidden md:flex w-64 lg:w-80 shrink-0 flex-col gap-2 p-5 lg:p-6 border-r border-line">
-        <div className="text-2xl lg:text-3xl font-extrabold px-4 py-4">GG <span className="text-violet">MATES</span></div>
+        <div className="px-4 py-4"><Logo size={40} text="text-2xl lg:text-3xl" /></div>
         {nav.map(n => <NavLink key={n.to} to={n.to} end className={link}><n.icon size={22} />{n.label}</NavLink>)}
         <button onClick={logout} className="mt-auto flex items-center gap-3 px-4 py-3 text-base lg:text-lg text-slate-400 hover:text-white"><LogOut size={22} />Выйти</button>
       </aside>

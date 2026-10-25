@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
-import { Loader2, Gamepad2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+import { Logo } from '../Logo';
 import { api } from '../api';
 import { useAuth, User } from '../auth';
 
@@ -22,7 +23,7 @@ export default function AuthPage() {
   return (
     <main className="min-h-screen grid place-items-center p-4">
       <form onSubmit={submit} className="glass w-full max-w-md sm:max-w-lg lg:max-w-xl p-6 sm:p-10 space-y-5">
-        <div className="flex items-center gap-2 text-3xl sm:text-4xl font-extrabold"><Gamepad2 className="text-violet" /> GG <span className="text-violet">MATES</span></div>
+        <Logo size={44} text="text-3xl sm:text-4xl" />
         <p className="text-slate-400 text-sm sm:text-base">{mode === 'register' ? 'Создай аккаунт и найди тиммейтов.' : 'С возвращением!'}</p>
         <label className="block text-sm sm:text-base">Никнейм<input className="input mt-1" value={f.nickname} onChange={set('nickname')} required minLength={3} maxLength={24} autoComplete="username" /></label>
         {mode === 'register' && <label className="block text-sm sm:text-base">Discord<input className="input mt-1" value={f.discord} onChange={set('discord')} required placeholder="username" /></label>}
