@@ -1,0 +1,18 @@
+@import "tailwindcss";
+@theme {
+  --color-ink: #0d0e13;
+  --color-panel: #151720;
+  --color-line: #262938;
+  --color-violet: #8b5cf6;
+  --color-electric: #3b82f6;
+}
+body { background: radial-gradient(900px 500px at 80% -10%, #3b2a7a55, transparent), radial-gradient(700px 400px at -10% 110%, #1d3f8f44, transparent), var(--color-ink); color: #e8e9f2; font-family: Inter, system-ui, sans-serif; min-height: 100vh; }
+:focus-visible { outline: 2px solid var(--color-violet); outline-offset: 2px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .65rem 1.1rem; border-radius: .75rem; font-weight: 600; color: #fff; background: linear-gradient(135deg, var(--color-violet), var(--color-electric)); transition: transform .15s, box-shadow .15s, opacity .15s; box-shadow: 0 6px 24px -8px #8b5cf6aa; }
+.btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 10px 28px -8px #8b5cf6cc; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.input { width: 100%; padding: .7rem .9rem; border-radius: .75rem; background: #0d0e13aa; border: 1px solid var(--color-line); color: inherit; }
+@media (min-width: 640px) { .input { padding: .85rem 1.1rem; font-size: 1.05rem; } .btn { padding: .8rem 1.4rem; } }
+.input:focus { border-color: var(--color-violet); }
+.glass { background: #151720b8; backdrop-filter: blur(10px); border: 1px solid var(--color-line); border-radius: 1.25rem; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
