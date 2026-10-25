@@ -1,6 +1,8 @@
 import 'express-async-errors';
 import 'dotenv/config';
 import http from 'node:http';
+import path from 'node:path';
+import fs from 'node:fs';
 import express, { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -15,6 +17,7 @@ import { setupSockets } from './sockets.js';
 if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 16) throw new Error('Задайте SESSION_SECRET (>=16 символов) в .env');
 const origin = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
 const app = express();
+app.set('trust proxy', 1);
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin, credentials: true } });
 const mm = new Matchmaker();
@@ -60,6 +63,12 @@ app.patch('/api/profile', requireAuth, async (req, res) => {
   }
 });
 
+// Раздача собранного клиента (client/dist) с того же адреса, что и API
+const clientDist = path.resolve(process.cwd(), 'client/dist');
+if (fs.existsSync(clientDist)) {
+  app.use(express.static(clientDist));
+  app.get(/^\/(?!api|socket\.io).*/, (_req, res) => res.sendFile(path.join(clientDist, 'index.html')));
+}
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => { console.error(err); res.status(500).json({ error: 'Внутренняя ошибка' }); });
 setupSockets(io, mm);
 setInterval(() => mm.expire().forEach((id) => io.to('user:' + id).emit('queue:cancelled', { reason: 'timeout' })), 10_000);
