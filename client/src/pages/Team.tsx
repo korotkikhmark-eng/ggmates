@@ -18,7 +18,7 @@ export default function Team() {
   const [msgs, setMsgs] = useState<Msg[]>([]); const [text, setText] = useState('');
   const [online, setOnline] = useState(socket.connected); const [copied, setCopied] = useState('');
   const left = useRef(false);
-  const [sendErr, setSendErr] = useState(''); const end = useRef<HTMLDivElement>(null);
+  const [sendErr, setSendErr] = useState(''); const box = useRef<HTMLDivElement>(null);
 
   const load = useCallback(() => api<TeamData>('/teams/' + id).then(setTeam).catch(e => setErr(e.message)), [id]);
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function Team() {
     clearTimeout(leaveTimer);
     return () => { leaveTimer = setTimeout(() => { if (!left.current) socket.emit('team:leave', { teamId: id }); }, 200); };
   }, [id]);
-  useEffect(() => end.current?.scrollIntoView({ behavior: 'smooth' }), [msgs]);
+  useEffect(() => { const el = box.current; if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' }); }, [msgs]);
 
   const send = (e: FormEvent) => {
     e.preventDefault(); if (!text.trim()) return; setSendErr('');
@@ -73,12 +73,11 @@ export default function Team() {
       <section className="glass flex flex-col h-[70vh]">
         <div className="px-5 py-3 border-b border-line flex items-center justify-between text-sm">Чат лобби
           <span className={`flex items-center gap-1 ${online ? 'text-emerald-400' : 'text-amber-400'}`}>{online ? <Wifi size={16} /> : <WifiOff size={16} />}{online ? 'Подключено' : 'Переподключение…'}</span></div>
-        <div className="flex-1 overflow-y-auto p-5 space-y-3">
+        <div ref={box} className="flex-1 overflow-y-auto p-5 space-y-3">
           {msgs.length === 0 && <p className="text-slate-500 text-center mt-10">Сообщений пока нет. Поздоровайтесь первыми!</p>}
           {msgs.map(m => (<div key={m.id} className={m.userId === user?.id ? 'text-right' : ''}>
             <div className="text-xs text-slate-500">{m.nickname} · {new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
             <div className={`inline-block max-w-[80%] px-3 py-2 rounded-2xl text-left break-words ${m.userId === user?.id ? 'bg-violet/30' : 'bg-white/5'}`}>{m.text}</div></div>))}
-          <div ref={end} />
         </div>
         <form onSubmit={send} className="p-3 border-t border-line flex gap-2">
           <input className="input" value={text} onChange={e => setText(e.target.value)} maxLength={500} placeholder="Сообщение…" aria-label="Сообщение" />
